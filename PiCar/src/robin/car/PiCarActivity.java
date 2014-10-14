@@ -15,7 +15,7 @@ import android.view.View;
  * status bar and navigation/system bar) with user interaction.
  * 
  * @see SystemUiHider
- */
+ */ 
 public class PiCarActivity extends Activity {
 	/**
 	 * Whether or not the system UI should be auto-hidden after
