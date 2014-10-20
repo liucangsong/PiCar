@@ -72,7 +72,7 @@ public class BreathingLight extends GpioDimmableLightComponent {
 	 */
 	public static void main(String[] args) {
 		Hardwares hw = new Hardwares();
-		hw.engineSwitch.on();
+		//hw.engineSwitch.on();
 		while(true){
 			hw.steeringLed.setActive(true);
 			hw.enginePowerLed.setActive(true);

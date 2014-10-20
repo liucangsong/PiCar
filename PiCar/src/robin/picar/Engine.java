@@ -4,7 +4,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.pi4j.component.power.impl.GpioPowerComponent;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.GpioPinPwmOutput;
 import com.pi4j.io.gpio.PinState;
 
 public class Engine extends CarComponent {
@@ -13,8 +15,8 @@ public class Engine extends CarComponent {
 	 * 
 	 */
 	private static final long serialVersionUID = -424275754144967846L;
-	private GpioPinDigitalOutput forwardPin;
-	private GpioPinDigitalOutput reversePin;
+	private GpioPinPwmOutput forwardPin;
+	private GpioPinPwmOutput reversePin;
 	
 	/** pwm 输出时间间隔, 20毫秒 */
 	public static final int INTERVAL = 20;
@@ -48,7 +50,7 @@ public class Engine extends CarComponent {
 	/** 1毫秒等于 1000000纳秒 */
 	private int ms = 1000000;
 	
-	public Engine(GpioPinDigitalOutput forwardPin, GpioPinDigitalOutput reversePin) {
+	public Engine(GpioPinPwmOutput forwardPin, GpioPinPwmOutput reversePin) {
 		this.forwardPin = forwardPin;
 		this.reversePin = reversePin;
 	}
@@ -219,8 +221,8 @@ public class Engine extends CarComponent {
 	}
 	
 	public void start(){
-		forwardPin.setState(PinState.LOW);
-		reversePin.setState(PinState.LOW);
+		//forwardPin.setState(PinState.LOW);
+		//reversePin.setState(PinState.LOW);
 		timer.scheduleAtFixedRate(new Pulse(), 0, INTERVAL, TimeUnit.MILLISECONDS);
 		timer.scheduleAtFixedRate(new GaerSwitcher(), 0, GEAR_SWITCH_INTERVAL, TimeUnit.MILLISECONDS);
 	}
@@ -273,11 +275,11 @@ public class Engine extends CarComponent {
 			int duration = getPulseDuration();
 			//int duration = ms * 10 + ms/2;
 			//如果输出功率>0 就控制前进pin 否则控制后退信号, 同时只能控制一个pin信号, 另外一个为低电平
-			GpioPinDigitalOutput pin = reversePin;
+			//GpioPinDigitalOutput pin = reversePin;
 			if(duration>0){
-				pin = forwardPin;
+				//pin = forwardPin;
 			}
-			pin.setState(PinState.HIGH);
+			//pin.setState(PinState.HIGH);
 			duration = Math.abs( duration );
 			//将纳秒换算为毫秒
 			int ms = duration/Engine.this.ms;
@@ -287,7 +289,7 @@ public class Engine extends CarComponent {
 			}catch(Exception e){
 				e.printStackTrace();
 			}
-			pin.setState(PinState.LOW);
+			//pin.setState(PinState.LOW);
 		}
 	}
 	public static void main(String[] args) throws Exception {
@@ -298,7 +300,7 @@ public class Engine extends CarComponent {
 		//Engine.maxPower = maxPower;
 		final Hardwares hw = new Hardwares();
 		
-		hw.engineSwitch.on();
+		//hw.engineSwitch.on();
 		
 		//pins.enginePower.setState(PinState.HIGH); 
 //		//

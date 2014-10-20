@@ -6,7 +6,7 @@ public class TestLight {
 
 	public static void main(String[] args) throws InterruptedException {
 		Hardwares hw = new Hardwares();
-		hw.engineSwitch.on();
+		//hw.engineSwitch.on();
 		hw.leftLight.on();
 		hw.rightLight.on();
 		hw.engineLedPin.setPwm(4096);

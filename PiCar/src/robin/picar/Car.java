@@ -54,18 +54,18 @@ public class Car implements
 		engine.addEngineListener(this);
 		radio.addRadioListener(this);
 		
-		hw.engineSwitch.addListener(new PowerListener() {
-			@Override
-			public void onStateChange(PowerStateChangeEvent event) {
-				if(event.getNewState() == PowerState.ON){
-					hw.enginePowerLed.on();
-				}else{
-					hw.enginePowerLed.off();
-				}
-			}
-		});
+//		hw.engineSwitch.addListener(new PowerListener() {
+//			@Override
+//			public void onStateChange(PowerStateChangeEvent event) {
+//				if(event.getNewState() == PowerState.ON){
+//					hw.enginePowerLed.on();
+//				}else{
+//					hw.enginePowerLed.off();
+//				}
+//			}
+//		});
 		
-		hw.engineSwitch.on();//打开电源板开关
+		//hw.engineSwitch.on();//打开电源板开关
 
 		state.enginePower=CarVO.ON;
 		

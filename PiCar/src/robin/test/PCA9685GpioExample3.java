@@ -67,7 +67,7 @@ public class PCA9685GpioExample3 {
     public static void main(String args[]) throws Exception {
     	Hardwares hw = new Hardwares();
     	GpioController gpio = GpioFactory.getInstance();
-    	hw.engineSwitch.on();
+    	//hw.engineSwitch.on();
         System.out.println("<--Pi4J--> PCA9685 PWM Example ... started.");
         // This would theoretically lead into a resolution of 5 microseconds per step:
         // 4096 Steps (12 Bit)

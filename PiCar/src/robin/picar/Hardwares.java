@@ -2,8 +2,7 @@ package robin.picar;
 
 import java.math.BigDecimal;
 
-import com.pi4j.component.light.impl.GpioDimmableLightComponent;
-import com.pi4j.component.power.impl.GpioPowerComponent;
+import com.pi4j.component.light.impl.GpioLEDComponent;
 import com.pi4j.component.servo.impl.PCA9685GpioServoProvider;
 import com.pi4j.gpio.extension.pca.PCA9685GpioProvider;
 import com.pi4j.gpio.extension.pca.PCA9685Pin;
@@ -30,23 +29,24 @@ public class Hardwares {
 	// GpioPinDigitalOutput steeringLed;
 	// public GpioPinDigitalOutput leftLight;
 	// public GpioPinDigitalOutput rightLight;
-	public GpioPinDigitalOutput forward;
-	public GpioPinDigitalOutput reverse;
+	public GpioPinPwmOutput forward;
+	public GpioPinPwmOutput reverse;
 	// GpioPinDigitalOutput enginePower;
 	// public GpioPinDigitalOutput radioLed;
 	public GpioPinDigitalInput speedIn;
 	// public GpioPinDigitalInput radarEcho;
 	// public GpioPinDigitalOutput radarTrig;
 
-	public GpioPowerComponent engineSwitch;
+	//public GpioPowerComponent engineSwitch;
 
 	public GpioPinPwmOutput servo;
 
-	public GpioPinPwmOutput leftLightPin;
-	public BreathingLight leftLight;
+	public GpioPinDigitalOutput leftLightPin;
+	public GpioLEDComponent leftLight;
 	
-	public GpioPinPwmOutput rightLightPin;
-	public BreathingLight rightLight;
+	
+	public GpioPinDigitalOutput rightLightPin;
+	public GpioLEDComponent rightLight;
 	
 	public GpioPinPwmOutput radioLedPin;
 	public BreathingLight radioLed;
@@ -71,17 +71,25 @@ public class Hardwares {
 		// gpioServoProvider = new
 		// PCA9685GpioServoProvider(gpioPCA9685Provider);
 
-		engineSwitch = new GpioPowerComponent(gpio.provisionDigitalOutputPin(
-				RaspiPin.GPIO_23, "引擎电源开关"));
+		//engineSwitch = new GpioPowerComponent(gpio.provisionDigitalOutputPin(
+		//		RaspiPin.GPIO_23, "引擎电源开关"));
 
-		rightLightPin = gpio.provisionPwmOutputPin(gpioPCA9685Provider, PCA9685Pin.PWM_00,
-				"右大灯");
-		leftLightPin = gpio.provisionPwmOutputPin(gpioPCA9685Provider, PCA9685Pin.PWM_01,
-				"左大灯");
+//		rightLightPin = gpio.provisionPwmOutputPin(gpioPCA9685Provider, PCA9685Pin.PWM_00,
+//				"右大灯");
+//		leftLightPin = gpio.provisionPwmOutputPin(gpioPCA9685Provider, PCA9685Pin.PWM_01,
+//				"左大灯");
 		//rightLight = new Light(PCA9685Pin.PWM_00, gpioPCA9685Provider);
-		leftLight = new BreathingLight(leftLightPin, 1, 21999);
-		rightLight = new BreathingLight(rightLightPin, 1, 21999);
+//		leftLight = new BreathingLight(leftLightPin, 1, 21999);
+//		rightLight = new BreathingLight(rightLightPin, 1, 21999);
+		
+		rightLightPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_28,"右大灯");
+		leftLightPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_29, "左大灯");
+		
+		rightLight = new GpioLEDComponent(rightLightPin);
+		leftLight = new GpioLEDComponent(leftLightPin);
+		
 		//leftLight = new Light(PCA9685Pin.PWM_01, gpioPCA9685Provider);
+
 		radioLedPin = gpio.provisionPwmOutputPin(gpioPCA9685Provider,
 				PCA9685Pin.PWM_02, "无线通信LED");
 		radioLed = new BreathingLight(radioLedPin, 1, 10000);
@@ -120,8 +128,14 @@ public class Hardwares {
 		// leftLight = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_22, "左侧大灯");
 		// rightLight = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_26,
 		// "右侧大灯");
-		forward = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_24, "前进");
-		reverse = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_25, "后退");
+		//forward = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_24, "前进");
+		//reverse = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_25, "后退");
+		
+		forward = gpio.provisionPwmOutputPin(gpioPCA9685Provider,
+				PCA9685Pin.PWM_00, "前进");
+		reverse = gpio.provisionPwmOutputPin(gpioPCA9685Provider,
+				PCA9685Pin.PWM_01, "后退");
+		
 		// enginePower = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_23,
 		// "引擎电源开关");
 
