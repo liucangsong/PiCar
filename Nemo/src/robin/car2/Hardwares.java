@@ -11,6 +11,7 @@ import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.GpioPinPwmOutput;
+import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CFactory;
@@ -30,7 +31,9 @@ public class Hardwares {
 	// public GpioPinDigitalOutput leftLight;
 	// public GpioPinDigitalOutput rightLight;
 	public GpioPinPwmOutput forward;
+	public Pin forwardPin;
 	public GpioPinPwmOutput reverse;
+	public Pin reversePin;
 	// GpioPinDigitalOutput enginePower;
 	// public GpioPinDigitalOutput radioLed;
 	public GpioPinDigitalInput speedIn;
@@ -91,27 +94,27 @@ public class Hardwares {
 		//leftLight = new Light(PCA9685Pin.PWM_01, gpioPCA9685Provider);
 
 		radioLedPin = gpio.provisionPwmOutputPin(gpioPCA9685Provider,
-				PCA9685Pin.PWM_02, "无线通信LED");
+				PCA9685Pin.PWM_00, "无线通信LED");
 		radioLed = new BreathingLight(radioLedPin, 1, 10000);
 		
 		steeringLedPin = gpio.provisionPwmOutputPin(gpioPCA9685Provider,
-				PCA9685Pin.PWM_03, "转向LED");
+				PCA9685Pin.PWM_01, "转向LED");
 		steeringLed = new BreathingLight(steeringLedPin, 1, 10000);
 		
 		enginePowerLedPin = gpio.provisionPwmOutputPin(gpioPCA9685Provider,
-				PCA9685Pin.PWM_04, "引擎电源LED");
+				PCA9685Pin.PWM_02, "引擎电源LED");
 		enginePowerLed = new BreathingLight(enginePowerLedPin, 1, 10000);
 		
 		engineLedPin = gpio.provisionPwmOutputPin(gpioPCA9685Provider,
-				PCA9685Pin.PWM_05, "引擎工作LED");
+				PCA9685Pin.PWM_03, "引擎工作LED");
 		engineLed = new BreathingLight(engineLedPin, 1, 10000);
 		
 		workingLedPin = gpio.provisionPwmOutputPin(gpioPCA9685Provider,
-				PCA9685Pin.PWM_06, "软件工作LED");
+				PCA9685Pin.PWM_04, "软件工作LED");
 		workingLed = new BreathingLight(workingLedPin, 1, 10000);
 		
 		servo = gpio.provisionPwmOutputPin(gpioPCA9685Provider,
-				PCA9685Pin.PWM_07, "转向舵机");
+				PCA9685Pin.PWM_05, "转向舵机");
 
 		// servo = new
 		// GenericServo(gpioServoProvider.getServoDriver(PCA9685Pin.PWM_08),
@@ -131,10 +134,12 @@ public class Hardwares {
 		//forward = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_24, "前进");
 		//reverse = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_25, "后退");
 		
+		forwardPin = PCA9685Pin.PWM_06;
 		forward = gpio.provisionPwmOutputPin(gpioPCA9685Provider,
-				PCA9685Pin.PWM_00, "前进");
+				forwardPin, "前进");
+		reversePin = PCA9685Pin.PWM_07;
 		reverse = gpio.provisionPwmOutputPin(gpioPCA9685Provider,
-				PCA9685Pin.PWM_01, "后退");
+				reversePin, "后退");
 		
 		// enginePower = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_23,
 		// "引擎电源开关");

@@ -17,32 +17,33 @@ public class Car extends IoHandlerAdapter implements Runnable {
 	private boolean lightOn;
 	private int speed;
 	
-	private static final int LEFT_MAX = 1260; // 1251
+	private static final int LEFT_MAX = 1625; // 1251
 	private static final int NEUTRAL = 1448;
-	private static final int RIGHT_MAX = 1625; //1645
+	private static final int RIGHT_MAX = 1260; //1645
 	
 	private Config config;
 	
 	private ScheduledExecutorService timer;
 	
 	public Car() {
-		forward=1;
-		reverse=1;
+		hardwares = new Hardwares();
+		forward=0;
+		reverse=0;
 		config = new Config("car.properties");
 		position = NEUTRAL;
 		timer = Executors.newScheduledThreadPool(1);
 		//定时执行汽车的功能
-		timer.schedule(this, 1000/50, TimeUnit.MILLISECONDS);
+		timer.scheduleAtFixedRate(this, 0, 1, TimeUnit.SECONDS);
 		
 	}
 	
 	public void forward(){
 		forward = 10000;
-		reverse = 1;
+		reverse = 0;
 	}
 	
 	public void reverse(){
-		forward = 1;
+		forward = 0;
 		reverse = 10000;
 	}
 	
@@ -62,11 +63,22 @@ public class Car extends IoHandlerAdapter implements Runnable {
 		this.lightOn = false;
 	}
 	
+	
+	
 	@Override
 	//汽车主更新线程
 	public void run() {
-		hardwares.forward.setPwm(forward);
-		hardwares.reverse.setPwm(reverse);
+		System.out.println(this);
+		if(forward==0){
+			hardwares.gpioPCA9685Provider.setAlwaysOff(hardwares.forwardPin);
+		}else{
+			hardwares.forward.setPwm(forward);
+		}
+		if(reverse==0){
+			hardwares.gpioPCA9685Provider.setAlwaysOff(hardwares.reversePin);
+		}else{
+			hardwares.reverse.setPwm(reverse);
+		}
 		hardwares.servo.setPwm(position);
 		if(lightOn){
 			hardwares.leftLight.on();
@@ -77,10 +89,18 @@ public class Car extends IoHandlerAdapter implements Runnable {
 		}
 	}
 	
+	@Override
+	public String toString() {
+		return "Car [forward=" + forward + ", reverse=" + reverse
+				+ ", position=" + position + ", lightOn=" + lightOn
+				+ ", speed=" + speed + "]";
+	}
+
 	public static void main(String[] args) {
 		Car car = new Car();
 		Scanner in = new Scanner(System.in);
 		while(true){
+			System.out.print("a s d w p:");
 			String s = in.nextLine();
 			System.out.println(s);
 			if(s.equals("w")){
@@ -91,6 +111,8 @@ public class Car extends IoHandlerAdapter implements Runnable {
 				car.left();
 			}else if(s.equals("d")){
 				car.right();
+			}else if(s.equals("l")){
+				car.lightOn = !car.lightOn;
 			}else if(s.equals("p")){
 				break;
 			}
