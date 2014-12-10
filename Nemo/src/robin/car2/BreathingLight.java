@@ -75,7 +75,7 @@ public class BreathingLight extends GpioDimmableLightComponent {
 		//hw.engineSwitch.on();
 		while(true){
 			hw.steeringLed.setActive(true);
-			hw.enginePowerLed.setActive(true);
+			//hw.enginePowerLed.setActive(true);
 			//hw.rightLight.setLevel(1000);
 			try {
 				Thread.sleep(500);

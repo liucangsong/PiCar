@@ -14,8 +14,8 @@ public class Car extends IoHandlerAdapter implements Runnable {
 	
 	private Hardwares hardwares;
 	
-	private int forward;
-	private int reverse;
+	//private int forward;
+	//private int reverse;
 	private int position;
 	private boolean lightOn;
 	private double speed; //m/s
@@ -26,6 +26,8 @@ public class Car extends IoHandlerAdapter implements Runnable {
 	private static final int LEFT_MAX = 1625; // 1251
 	private static final int NEUTRAL = 1448;
 	private static final int RIGHT_MAX = 1260; //1645
+
+	private int motorPwm;
 	
 	private Config config;
 	
@@ -35,8 +37,8 @@ public class Car extends IoHandlerAdapter implements Runnable {
 	
 	public Car() {
 		hardwares = new Hardwares();
-		forward=0;
-		reverse=0;
+		//forward=0;
+		motorPwm=0;
 		config = new Config("car.properties");
 		position = NEUTRAL;
 		timer = Executors.newScheduledThreadPool(1);
@@ -54,13 +56,11 @@ public class Car extends IoHandlerAdapter implements Runnable {
 	}
 	
 	public void forward(){
-		forward = 10000;
-		reverse = 0;
+		motorPwm = 5000;
 	}
 	
 	public void reverse(){
-		forward = 0;
-		reverse = 10000;
+		motorPwm = 1000;
 	}
 	
 	public void right(){
@@ -76,20 +76,8 @@ public class Car extends IoHandlerAdapter implements Runnable {
 	}
 	/** 主电机控制 */
 	private void handlMoto(){
-		if(forward==0){
-			hardwares.gpioPCA9685Provider.setAlwaysOff(hardwares.forwardPin);
-		}else{
-			hardwares.forward.setPwm(forward);
-			forward -= 10;
-			forward = Math.max(forward, 0);
-		}
-		if(reverse==0){
-			hardwares.gpioPCA9685Provider.setAlwaysOff(hardwares.reversePin);
-		}else{
-			hardwares.reverse.setPwm(reverse);
-			reverse -= 10;
-			reverse = Math.max(reverse                                                                                                        , 0);
-		}
+			hardwares.motor.setPwm(motorPwm);
+		
 	}
 	/** 舵机控制器 */
 	private void handlServo(){
@@ -122,11 +110,14 @@ public class Car extends IoHandlerAdapter implements Runnable {
 		handlMoto();
 	}
 	
+	
+
 	@Override
 	public String toString() {
-		return "Car [forward=" + forward + ", reverse=" + reverse
-				+ ", position=" + position + ", lightOn=" + lightOn
-				+ ", speed=" + speed + "]";
+		return "Car [hardwares=" + hardwares + ", position=" + position
+				+ ", lightOn=" + lightOn + ", speed=" + speed
+				+ ", speedPulseCount=" + speedPulseCount + ", motorPwm="
+				+ motorPwm + ", config=" + config + ", timer=" + timer + "]";
 	}
 
 	public static void main(String[] args) {
